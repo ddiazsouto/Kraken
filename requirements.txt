@@ -13,3 +13,4 @@ gunicorn
 deltalake
 polars
 pandas
+yaml

@@ -1,31 +1,19 @@
 import polars as pl
 import requests
+import yaml
 from datetime import datetime
 from flask import jsonify
 from pathlib import Path
 
 
 class TruelayerRaw:
-    CLIENT_ID = "personalaccounting-9d862a"
-    CLIENT_SECRET = "7c35e5c4-86b2-4035-9970-331f182c0974"
-    REDIRECT_URI= "http://localhost:3000/callback"
-    AUTH_URL="https://auth.truelayer.com"
-    API_URL="https://api.truelayer.com"
-    scopes = [
-        "info", "accounts", "balance", "cards", "transactions",
-        "direct_debits", "standing_orders", "offline_access"
-    ]
-    providers = [
-        "barclays",
-        "lloyds",
-        "tesco",
-        "capital-one"
-    ]
+    def __init__(self, bearer_token: str | None = None):
+        self.bearer_token = bearer_token
+        for attribute_name, attribute_value in load_truelayer_metadata().items():
+            setattr(self, attribute_name, attribute_value)
 
     @property
     def access_link(self):
-        auth_link = "https://auth.truelayer.com/?response_type=code&client_id=personalaccounting-9d862a&scope=info%20accounts%20balance%20cards%20standing_orders%20offline_access%20transactions%20direct_debits&redirect_uri=http://localhost:3000/callback&providers=uk-ob-barclays%20uk-ob-lloyds%20uk-ob-tesco%20uk-ob-capital-one%20uk-oauth-all"
-
         return (
             f"{self.AUTH_URL}/?response_type=code&"
             f"client_id={self.CLIENT_ID}&scope={'%20'.join(self.scopes)}&"
@@ -36,6 +24,7 @@ class TruelayerRaw:
 
 class TruelayerAPI(TruelayerRaw):
     def __init__(self, bearer_token: str):
+        super().__init__(bearer_token)
         self.bearer_token = bearer_token
         self._accounts_request = self.get_accounts()
 
@@ -98,3 +87,15 @@ class TruelayerAPI(TruelayerRaw):
         self.transactions(account_id).to_pandas().to_parquet(
             f"{output_dir}/{account_id}.parquet"
         )
+
+def load_truelayer_metadata() -> dict:
+    """Load the truelayer_metadata.yaml located next to this module and return it as a dict.
+
+    Returns an empty dict if the file does not exist or cannot be parsed.
+    """
+    yaml_path = Path(__file__).parent / "truelayer_metadata.yaml"
+
+    with yaml_path.open("r", encoding="utf-8") as fh:
+        data = yaml.safe_load(fh)
+        return data or {}
+

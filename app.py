@@ -1,6 +1,7 @@
 import requests
 import secrets
 from flask import Flask, redirect, render_template, request
+import os
 
 from bank_data.truelayer_api import TruelayerAPI, TruelayerRaw
 from formularium import login_form, body_composition, add_gym_data_selection, updating
@@ -25,15 +26,10 @@ app.my_global = {
 }
 
 CLIENT_ID = "personalaccounting-9d862a"
-CLIENT_SECRET = "7c35e5c4-86b2-4035-9970-331f182c0974"
+CLIENT_SECRET = os.getenv("CLIENT_SECRET")
 REDIRECT_URI= "http://localhost:3000/callback"
 AUTH_URL="https://auth.truelayer.com"
 API_URL="https://api.truelayer.com"
-scopes = [
-    "info", "accounts", "balance", "cards", "transactions",
-    "direct_debits", "standing_orders", "offline_access"
-]
-
 """
 Now some logic for the app and its routes
 
@@ -91,20 +87,6 @@ def add_body_composition():
                            message=msg,
                            select_input_type=add_gym_data_selection(),
                            form=body_composition(), user=user)
-
-@app.route(
-    '/bank_data',
-    methods=['GET', 'POST']
-)
-def access_truelayer():
-
-    auth_link = (
-        f"{AUTH_URL}/?response_type=code&"
-        f"client_id={CLIENT_ID}&scope={'%20'.join(scopes)}&"
-        f"redirect_uri={REDIRECT_URI}&response_mode=query&providers=uk-ob-barclays%20uk-oauth-all"
-    )
-    return f'<a href="{auth_link}">Refresh transactions</a>'
-
 
 
 @app.route("/callback", methods=["GET", "POST"])
