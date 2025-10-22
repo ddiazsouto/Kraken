@@ -1,7 +1,7 @@
 #!/usr/bin/env pwsh
 
-$winVenvPath = ".\kraken_env\Scripts\Activate.ps1"
-$linuxVenvPath = "./kraken_env/bin/activate"
+$winVenvPath = "..\kraken_env\Scripts\Activate.ps1"
+$linuxVenvPath = "../kraken_env/bin/activate"
 
 if (-not $env:VIRTUAL_ENV) {
     Write-Host "Virtual environment not active. Activating..."
@@ -13,7 +13,7 @@ if (-not $env:VIRTUAL_ENV) {
 
     } elseif (Test-Path $linuxVenvPath) {
         Write-Host "Linux environment detected. Activating virtual environment..."
-        source $linuxVenvPath
+        sh $linuxVenvPath
         Write-Host "Virtual environment activated."
 
     } else {
