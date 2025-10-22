@@ -2,7 +2,7 @@ import requests
 import secrets
 from flask import Flask, redirect, render_template, request
 
-from accounting.truelayer_api import TruelayerAPI, TruelayerRaw
+from bank_data.truelayer_api import TruelayerAPI, TruelayerRaw
 from formularium import login_form, body_composition, add_gym_data_selection, updating
 
 from user import User
@@ -38,7 +38,6 @@ scopes = [
 Now some logic for the app and its routes
 
 """
-
 
 @app.route('/home')
 @app.route('/')
@@ -94,7 +93,7 @@ def add_body_composition():
                            form=body_composition(), user=user)
 
 @app.route(
-    '/accounting',
+    '/bank_data',
     methods=['GET', 'POST']
 )
 def access_truelayer():
