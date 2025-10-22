@@ -1,0 +1,61 @@
+{% extends 'master_home.html'%}
+
+
+
+   
+
+{% block menu %}
+
+<center>
+
+
+
+
+        <form method='POST', action='', style="padding: 1px 1px 1px 1px; max-height: 180px; text-align: center;">
+            <p>
+                <br><br> {{select_input_type.hidden_tag()}}
+            What do you want to do<br>
+            {{select_input_type.selection}}<br><br>
+            {{select_input_type.pressa}}<br>            
+            {{user.name()}}
+            </p>   <br><br> 
+        </form>
+
+ 
+
+{% if select_input_type.selection.data == 'body_composition' %}
+
+<form method='POST', action=''>
+        <p>
+            <br><br> {{form.hidden_tag()}}
+        {{form.weight.label}}{{form.weight}}<br>
+        {{form.fat_percentage.label}}{{form.fat_percentage}}<br>
+        {{form.muscle_percentage.label}}{{form.muscle_percentage}}<br>
+        {{form.visceral_fat.label}}{{form.visceral_fat}}<br>
+        {{form.details.label}}{{form.details}}<br><br>
+        {{form.add_metrics}}
+        </p>         <p>
+    </form> 
+
+{% elif message %}
+
+
+        <form >
+            <b>
+            The following parameters have been added: <br><br>
+              Weight - {{form.weight.data}} <br>
+              Fat % - {{form.fat_percentage.data}}<br>
+              Muscle % - {{form.muscle_percentage.data}}<br>
+              Visceral Fat - {{form.visceral_fat.data}}<br>
+              Details - {{form.details.label if details}}<br><br>
+            </b>
+        </form>
+
+
+
+
+{% endif %}
+
+</center>
+
+{% endblock menu %}

@@ -1,0 +1,128 @@
+<html>
+
+<head>
+    
+
+        <style>
+            /* Style The Dropdown Button */
+            .dropbtn {
+              background-color: #aaaaff;
+              color: white;
+              padding: 16px;
+              font-size: 16px;
+              min-width: 120px;
+              border: none;
+              cursor: pointer;
+            }
+            
+            /* The container <div> - needed to position the dropdown content */
+            .dropdown {
+              position: relative;
+              display: inline-block;
+            }
+            
+            /* Dropdown Content (Hidden by Default) */
+            .dropdown-content {
+              display: none;
+              position: absolute;
+              background-color: #aaaaff3f;
+              min-width: 160px;
+              border-radius: 7px;
+              box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+              z-index: 1;
+            }
+            
+            /* Links inside the dropdown */
+            .dropdown-content a {
+              color: #000000;
+              padding: 12px 16px;
+              text-decoration: none;
+              border-radius: 3px;
+              display: block;
+            }
+            
+            /* Change color of dropdown links on hover */
+            .dropdown-content a:hover {background-color: #3333ffb7}
+            
+            /* Show the dropdown menu on hover */
+            .dropdown:hover .dropdown-content {
+              display: block;
+            }
+            
+            /* Change the background color of the dropdown button when the dropdown content is shown */
+            .dropdown:hover .dropbtn {
+              background-color: #2222ff9c;
+            }
+
+            .heady{
+              color: #aaaaaa;
+              font-size: 18px;
+              width: auto;
+              position: static;
+              position: sticky;
+              background-color: #ffffffaa;
+              padding-top: 1px;
+              font-family: garamond;
+
+            }
+
+            body  {  
+        background-image:url("https://images.hdqwalls.com/wallpapers/lake-reflections-4k-wide.jpg");  
+        background-size: cover;
+        position:static;
+        border: 2px solid #cccccc;
+        background-repeat: no-repeat;
+ 
+        }  
+
+
+
+            </style>
+
+
+            <div class="heady">
+              <td>
+
+              <p>
+                <h1><center>Data Centre</center></h1> </p>
+                                
+                <hr>    
+              </td>
+            </div>
+
+
+
+
+              
+    
+    
+
+
+</head>
+
+<body style="background-color:white; font-family: garamond;">
+
+  
+  {% block body %}
+
+  <div> &ensp;&ensp; <b>
+    <div class="dropdown">
+      <button class="dropbtn">&ensp;&ensp;Main &ensp;&ensp;</button>
+      <div class="dropdown-content">
+        <a href="home"><center>Menu</center></a>
+        <a href="#"><center>Get Premium</center></a>
+        <a href="login"><center>Log-in</center></a>
+        <a href="#"><center>About</center></a>
+
+      </div>
+    </div>
+
+    </div>
+  </b>
+
+    {% endblock body %}
+
+    
+</body>
+
+</html>

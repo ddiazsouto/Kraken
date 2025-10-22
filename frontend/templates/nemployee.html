@@ -1,0 +1,55 @@
+
+{% if 'Sales' in user.department() %}
+
+{% extends 'master_home.html'%}
+
+{% elif 'HR' in user.department() %}
+
+{% extends 'dpt-hr.html' %}
+
+{% else %}
+
+{% extends 'home.html' %}
+
+{% endif %}
+
+
+
+{%if user.department() == 'Sales' or user.department() == 'HR' %}
+
+{% block menu %}
+
+<center>
+
+<div class=form>
+    <form method='POST', action=''>
+        <p>
+            <br><br>
+        {{form.hidden_tag()}}
+        {{form.emp_name.label}}{{form.emp_name}}<br>
+        {{form.emp_surname.label}}{{form.emp_surname}}<br>
+        {{form.role.label}}{{form.role}}<br>
+        {{form.team.label}}{{form.team}}<br>
+       <br><br>
+        {{form.add_employee}}
+        </p>
+        <p><h4> {{message}} </h4></p>
+
+    </form>
+
+</div>
+   
+</center>
+
+{%endblock menu%}
+
+{% else %}
+
+
+<h4>
+Hi{{user.name()}}, you are not logged-in
+</h4>
+
+
+
+{% endif %}

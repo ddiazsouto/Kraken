@@ -1,0 +1,54 @@
+{% extends 'home.html' %}
+
+{% block body %}
+
+
+<p></p>
+
+<style>
+    table{
+    background-color: lightblue; width: 20px; padding: 25px;    
+
+    position:fixed;
+    border-radius:7px;
+    width:1050px;
+    height:510px;
+    background:#eeeeeeaf;
+    left:150px;
+    top:100px;
+
+    }
+</style> 
+
+
+<table>
+    <td>
+        <center>
+<div class='form'>
+    <form method='POST', action='', style=text-align:center , >
+        <h4>
+        {{ form.hidden_tag() }}
+        {{ form.login.label }} &emsp; &emsp;&emsp;&emsp;&ensp;&emsp;&ensp;
+        {{ form.passwd.label }}&emsp; &emsp;&emsp;
+        <br>
+        {{ form.login }} {{form.passwd}}
+        <br>
+    </h4>
+        
+        {{ form.submit }}
+        
+        <p>
+        <h4>{{message}}</h4>
+    </p>
+        
+
+    </form>
+
+</div>
+</td>
+</table>
+</center>
+
+
+{% endblock body %}
+

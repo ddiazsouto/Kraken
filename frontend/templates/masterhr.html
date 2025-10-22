@@ -1,0 +1,89 @@
+{% extends 'master.html'%}
+
+<style>
+
+
+    form{
+        width:420px;
+        height:270px;
+        background-color: #ffffff55;
+        border-radius:7px;    
+        text-align: right;
+        padding: 80px 80px;
+        position: relative;
+        top: -400px;
+        right: -80px;
+           
+        }
+    
+        
+        .content {
+            display:inline-block; 
+            position: relative;
+            top: -400px;
+            right: -50px;
+        
+            
+        }
+
+    
+    </style>
+    
+    
+                    
+{% block menu %}
+
+
+<center>
+     
+
+
+    <div class="content">
+    <center>   <h2> Welcome {{user.name()}} </h2> </center>
+
+    <form method='POST', action=''>
+    <br> {{message}}<br>
+    {{form.selection}}{{form.action}}
+    <br><br>
+    {{form.confirm}}<br>    
+    </form>
+
+    <table class="frame" >
+                    
+        {%for element in list%}
+        {% if list.index(element)%4==0 %}
+    
+        <tr>
+    
+            <th>
+            {% for j in element %}
+            {{j}}<br>
+            {% endfor %}
+            </th> 
+    
+    
+    
+        {% else %}
+    
+    
+            <th>
+                {% for j in element %}
+                {{j}}<br>
+                {% endfor %}
+                </th> 
+                
+    
+    
+        {% endif %}
+        {% endfor %}
+    
+    </table>     
+    
+    </div>
+    
+    </center>
+
+
+
+
+{% endblock menu %}

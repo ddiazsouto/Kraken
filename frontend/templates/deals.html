@@ -1,0 +1,29 @@
+{% extends 'master_home.html'%}
+
+
+
+   
+
+{% block menu %}
+<center>
+    
+    <div class=form>
+        <form method='POST', action=''>
+            <p>
+                <br><br>
+            {{form.hidden_tag()}}
+            {{form.amount.label}}{{form.amount}}          <br>
+            {{form.employee_id.label}}{{form.employee_id}}<br>
+            {{form.client_id.label}}{{form.client_id}}    <br>
+            {{form.close_deal}}
+            </p> 
+            <p><h4>{{message}}</h4></p>
+    
+    
+        </form>
+    
+    </div>
+
+</center>
+
+{% endblock menu %}

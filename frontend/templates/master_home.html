@@ -1,0 +1,175 @@
+{% extends 'home.html' %}
+
+{% block body %}
+
+
+
+<style>
+
+    form{
+    width:420px;
+    height:270px;
+    background-color: #ffffff55;
+    border-radius:7px;    
+    text-align: right;
+    padding: 80px 80px;
+    position: relative;
+    top: -400px;
+    right: -80px;
+       
+    }
+
+    .frame{
+
+
+    background-color: #ffffff55;
+    border-radius:7px;    
+    text-align: right;
+    padding: 15px 15px;
+    display:inline-block; 
+    position: static;
+
+        
+    }
+
+    td, th, tr{
+        background-color: #ffffff55;
+        padding: 25px 35px;
+        border-style: double;
+        border-radius:10px;
+        min-width: 100px;
+        max-width: 250px;
+    }
+    
+    .sidebary{
+              
+              width: 10%;
+              position: static;
+              position: sticky;
+              display:inline-block;
+              top: 10;
+              background-color: #000000aa;
+              padding-top: 25px;
+              padding: 25px;
+              max-width: 110px;
+              
+
+            }
+
+    .content {
+        display:inline-block; 
+        position: relative;
+        top: -400px;
+        right: -80px;
+        
+
+        
+        
+    }
+
+
+</style> 
+
+
+
+
+<div class=sidebary style="display:inline-block; "> 
+    <p>
+    <div class="dropdown">
+        <a href="sales"><button class="dropbtn" style=border-radius:10px;> Main </button></a>
+            </div>
+        </p>
+        <p>
+    <div class="dropdown">
+        <a href="add_body_composition"><button class="dropbtn" style=border-radius:10px;>Add <br>Gym Data </button></a>
+            </div>
+        </p>
+        <p>
+        <div class="dropdown">
+            <a href="{{truelayer_link}}"><button class="dropbtn" style=border-radius:10px;>Read Bank Data</button></a>
+                </div>
+                </p>
+                <p>
+        <div class="dropdown">
+            <a href="deals"><button class="dropbtn" style=border-radius:10px;>New Deal </button></a>
+          </div>
+                </p>
+                <p>
+                <div class="dropdown">
+                    <a href="#"><button class="dropbtn" style=border-radius:10px;>New Expense </button></a>
+                </div>
+                </p>
+                <p>
+                    <div class="dropdown", style=border-radius:10px;>
+                        <a href="login"><button class="dropbtn" style=border-radius:10px;>Log out </button></a>
+                            </div>
+                            </p>
+            
+
+
+</div>
+
+
+
+{% block menu %}
+
+
+<center>
+
+
+<div class="content" >
+
+
+    <center>      <h2>     Welcome {{user.name()}}    </h2>             </center>
+
+
+
+    <table class="frame">
+
+
+
+        {%for element in list%}
+        {% if list.index(element)%4==0 %}
+
+        <tr>
+
+            <th>
+            {% for j in element %}
+            {{j}}<br>
+            {% endfor %}
+            </th> 
+
+
+
+        {% else %}
+
+
+            <th>
+                {% for j in element %}
+                {{j}}<br>
+                {% endfor %}
+                </th> 
+                
+
+
+        {% endif %}
+        {% endfor %}
+
+
+
+        </table>
+
+
+
+    </div>
+
+</center>
+
+{% endblock menu %}
+
+
+
+
+{% endblock body %}
+
+
