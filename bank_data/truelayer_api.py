@@ -4,11 +4,13 @@ import yaml
 from datetime import datetime
 from flask import jsonify
 from pathlib import Path
+import os
 
 
 class TruelayerRaw:
     def __init__(self, bearer_token: str | None = None):
         self.bearer_token = bearer_token
+        self.CLIENT_SECRET = os.getenv("CLIENT_SECRET")
         for attribute_name, attribute_value in load_truelayer_metadata().items():
             setattr(self, attribute_name, attribute_value)
 
