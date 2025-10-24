@@ -1,35 +1,20 @@
 import requests
 import secrets
 from flask import Flask, redirect, render_template, request
-import os
 
 from bank_data.truelayer_api import TruelayerAPI, TruelayerRaw
+from bank_data.functions.remaining_direct_debits_logic import remaining_direct_debits_logic
 from formularium import login_form, body_composition, add_gym_data_selection, updating
 
 from user import User
 
 
-"""
-Up here the app and database configuration are defined as well as their connections to python
-
-First the connection the database through SQLAlchemy
-
-"""
-
-from flask import Flask
-
-
 app = Flask(__name__, template_folder='frontend/templates')
-app.config['SECRET_KEY']='dAnIel52'
+app.config['SECRET_KEY'] = secrets.token_hex(16)
 app.my_global = {
     "access_key": secrets.token_hex(16)
 }
 
-CLIENT_ID = "personalaccounting-9d862a"
-CLIENT_SECRET = os.getenv("CLIENT_SECRET")
-REDIRECT_URI= "http://localhost:3000/callback"
-AUTH_URL="https://auth.truelayer.com"
-API_URL="https://api.truelayer.com"
 """
 Now some logic for the app and its routes
 
@@ -95,73 +80,45 @@ def callback():
     code = request.args.get("code")
     if not code:
         return "No code in callback."
-
+    
+    truelayer_data = TruelayerRaw()
     _data = {
         "grant_type": "authorization_code",
-        "client_id": CLIENT_ID,
-        "client_secret": CLIENT_SECRET,
-        "redirect_uri": REDIRECT_URI,
+        "client_id": truelayer_data.CLIENT_ID,
+        "client_secret": truelayer_data.CLIENT_SECRET,
+        "redirect_uri": truelayer_data.REDIRECT_URI,
         "scope": request.args.get("scope"),
         "code": code 
     }
-    token_resp = requests.post(f"{AUTH_URL}/connect/token", data=_data)
+    token_resp = requests.post(
+        f"{truelayer_data.AUTH_URL}/connect/token", data=_data
+    )
 
     if token_resp.status_code != 200:
         return f"Error fetching token: {token_resp.text}", 500
 
     token_data = token_resp.json()
-    app.my_global["truelayer_api"] = TruelayerAPI(bearer_token=token_data["access_token"])
-    return redirect("accounts")
+    truelayer_api = TruelayerAPI(bearer_token=token_data["access_token"])
+    truelayer_api.save_accounts()
+    for account_id in truelayer_api.account_ids:
+        truelayer_api.save_transactions(account_id)
+
+    app.my_global["truelayer_api"] = truelayer_api
+
+    return redirect("calculate_remaining_transactions")
 
 
-@app.route("/accounts", methods=["GET", "POST"])
+@app.route("/calculate_remaining_transactions", methods=["GET", "POST"])
 def accounts():
-    account_api = app.my_global.get("truelayer_api")
-    account_ids = account_api.account_ids
-
-    account_api.save_accounts()
-    for account_id in account_ids:
-        account_api.save_transactions(account_id)
-
-    # The following should be extracted in a different endpoint
-    # for now we find it useful to return the pending direct debits, although
-    # this should be a new option and endpoint
-    from datetime import datetime, timedelta
-    import polars as pl
-
-    columns = [
-        'amount', 'description', 'timestamp', 'payment_month'
-    ]
-    direct_debits = pl.read_delta(
-        "/data_warehouse/data/bank_data/staging/bank_transactions",
-        columns=['amount', 'description', 'expense', 'timestamp', 'payment_month']
-    ).filter(
-        (pl.col("payment_month") == 7) & (pl.col("expense").is_not_null())
-    )
-    new_transactions = account_api.transactions("e0abf34cb5ad739813add80fb5aa99c4").select(
+    truelayer_api = app.my_global.get("truelayer_api")
+    direct_debits_account  = "e0abf34cb5ad739813add80fb5aa99c4"
+    new_transactions_df = truelayer_api.transactions(
+        direct_debits_account
+    ).select(
         "description", "amount", "timestamp"
-    ).with_columns(
-            pl.when(pl.col("description").str.contains("AXA") | pl.col("description").str.contains("COSTA LIMITED"))
-      .then((pl.lit("beginning")))
-      .alias("temp_col")
-    ).filter(
-        pl.col("timestamp") > (datetime.now() - timedelta(days=30))
     )
+    returned_df = remaining_direct_debits_logic(new_transactions_df)
 
-    beginning = new_transactions.filter(
-        pl.col("temp_col").is_in(["beginning"])
-    ).sort("timestamp").head(1).select("timestamp").item()
-
-    new_transactions = new_transactions.filter(
-        pl.col("timestamp") > beginning
-    )
-
-    returned_df = direct_debits.join(
-        new_transactions,
-        on=pl.col("description").str.slice(0, 15),
-        how="anti"
-    )
-    pl.Config(tbl_rows=300)
     return f"<html><head></head> <body>Remaining amount: {sum(returned_df['amount'].to_list())},<br><hr> From: <br>{'<br>'.join(returned_df['description'].to_list())}</body></html>"
 
 
@@ -180,7 +137,7 @@ def sales():
 
 
 
-@app.route('/Over', methods=['GET', 'POST'])
+@app.route('/reports', methods=['GET', 'POST'])
 def Master():
 
     user=User()

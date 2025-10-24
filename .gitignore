@@ -35,3 +35,7 @@ env/
 ENV/
 env.bak
 kraken-env/
+
+# Functions not to commit
+
+bank_data/functions/remaining_direct_debits_logic.py
