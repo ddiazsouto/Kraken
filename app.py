@@ -15,10 +15,6 @@ app.my_global = {
     "access_key": secrets.token_hex(16)
 }
 
-"""
-Now some logic for the app and its routes
-
-"""
 
 @app.route('/home')
 @app.route('/')
@@ -60,12 +56,6 @@ def add_body_composition():
     user=User()
     editing=updating()
     msg = None
-
-
-    # if request.method=='POST':
-    #     data = body_composition()
-        
-    #     msg = True
 
     return render_template('client.html',
                            form3=editing,
@@ -122,8 +112,6 @@ def accounts():
     return f"<html><head></head> <body>Remaining amount: {sum(returned_df['amount'].to_list())},<br><hr> From: <br>{'<br>'.join(returned_df['description'].to_list())}</body></html>"
 
 
-
-
 @app.route('/master_home')
 def sales():
 
@@ -136,7 +124,6 @@ def sales():
     return render_template('master_home.html', title='Sales', user=user, list=list)
 
 
-
 @app.route('/reports', methods=['GET', 'POST'])
 def Master():
 
@@ -146,12 +133,5 @@ def Master():
 
 
 
-"""
-    Here the app runs       and lives       not to touch        leave alone     logic above
-"""
-
-
 if __name__=='__main__':
     app.run(debug=True, port=3000, host="0.0.0.0")
-
-# MySQL.off()
